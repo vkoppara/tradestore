@@ -1,0 +1,1 @@
+insert into TRADE_RECORD values ('T1',1,'B1','CP-1',TO_DATE('19/03/2021','DD/MM/YYYY'),false,TO_DATE('10/03/2021','DD/MM/YYYY'))
