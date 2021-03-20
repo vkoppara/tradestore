@@ -69,3 +69,5 @@
     }
    ]
    ```
+# Junit Test Report
+![image](https://user-images.githubusercontent.com/49525515/111860435-6f7f8200-896d-11eb-8e5a-62472a5327d8.png)
