@@ -73,8 +73,8 @@
    ```
 # Response Messages and Scnearios
 
-| Scneario  | Message |   Http Response Code |
-| ------------- | ------------- |
+| Scneario      | Message |   Http Response Code |
+| ------------- | ------------- | ------------- |
 | Input record's Maturity date is in past | The Maturity Date Cannot be Older than Current Date  | 500 |
 | Input record's tradeId is empty or null or the versios is <= 0   | Either TradeId or Version is invalid  | 500 |
 | Input record's version is less than the one existing in the system | version is less than existing.. cannot be inserted/updated | 500 |
