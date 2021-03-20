@@ -82,7 +82,7 @@
 | Success | Inserted/Updated Successfully | 200 |
    
 # Table records snapshot after the cron job execution
-![image](https://user-images.githubusercontent.com/49525515/111861574-537fde80-8975-11eb-9c9d-923d83d824f0.png)
+![image](https://user-images.githubusercontent.com/49525515/111865606-16741600-898e-11eb-9f3a-1d554471c780.png)
 
 # Junit Test Report
 ![image](https://user-images.githubusercontent.com/49525515/111860435-6f7f8200-896d-11eb-8e5a-62472a5327d8.png)
