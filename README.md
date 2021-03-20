@@ -71,6 +71,24 @@
     }
    ]
    ```
+
+3) HttpMethod: GET URL: https://localhost:8443/tradeRecords/<TradeId>
+   Headers: None
+   ```javascript
+   Example Response:
+   [
+    {
+        "tradeId": "T1",
+        "version": 1,
+        "counterPartyId": "CP-1",
+        "bookId": "B1",
+        "maturityDate": "10/03/2021",
+        "createdDate": "19/03/2021",
+        "expired": false
+    },
+   ]
+   ```
+
 # Response Messages and Scnearios
 
 | Scneario      | Message |   Http Response Code |
