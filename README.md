@@ -6,6 +6,7 @@
 4) mvnw.cmd surefire-report:report  #for junit and reports
 5) mvnw spring-boot:run
 6) Port 8443 (https) is opened for accessing the services
+7) https://localhost:8443/h2-console (for h2-console) - use url: jdbc:h2:mem:trade
 
 
 
