@@ -89,3 +89,7 @@
 8. A h2 database has been used for storing the trade store records. It is in memory database, rebooting of the application will clean the previously inserted records.
 9. Maven build tool has been used to build the application.
 10. Junits covers all the insert and update scenarios. The developement was not done with TDD.
+11. AOP has been used to intercept and to log the time taken by each method.
+
+# Next Steps:
+1. Create a Docker Image and plug into a CI/CD pipeline
