@@ -9,6 +9,7 @@
 # Service EndPoints
 1) HttpMethod: POST URL: https://localhost:8443/tradeRecords
    Headers: Content-Type=application/json
+   ```javascript
    Sample request Body: 
    {
     "tradeId": "T1",
@@ -23,5 +24,6 @@
     "version": 1,
     "statusMessage": "Inserted/Updated Successfully"
     }
+    ```
 
 2) 
