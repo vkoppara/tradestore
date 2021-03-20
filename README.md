@@ -4,7 +4,8 @@
 2) mvnw.cmd clean install
 3) mvnw.cmd test 
 4) mvnw.cmd surefire-report:report  #for junit and reports
-5) Port 8443 (https) is opened for accessing the services
+5) mvnw spring-boot:run
+6) Port 8443 (https) is opened for accessing the services
 
 
 
