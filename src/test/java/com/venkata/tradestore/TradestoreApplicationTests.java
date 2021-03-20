@@ -2,6 +2,7 @@ package com.venkata.tradestore;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -18,6 +19,7 @@ class TradestoreApplicationTests {
 	private TradeController tradeController;
 
 	@Test
+	@DisplayName("Trade Store Application Test")
 	void contextLoads() throws Exception {
 		assertThat(tradeController).isNotNull();
 	}

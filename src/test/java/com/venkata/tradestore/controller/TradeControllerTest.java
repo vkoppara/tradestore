@@ -3,6 +3,7 @@ package com.venkata.tradestore.controller;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doNothing;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -32,6 +33,7 @@ public class TradeControllerTest  {
 	private TradeStoreService service;
 	
 	@Test
+	@DisplayName("TradeController createRecord Test")
 	public void createRecord() throws Exception{
 		String content="{\r\n" + 
 				"    \"tradeId\": \"T1\",\r\n" + 

@@ -8,6 +8,7 @@ import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -29,8 +30,9 @@ public class TradeStoreServiceTest {
 
 	private TradeRecordRepo repo = Mockito.mock(TradeRecordRepo.class);
 
-	// case -1 No existing record
+	
 	@Test
+	@DisplayName("case -1 No existing record")
 	public void createRecord1() throws TradeStoreValidityException, ParseException {
 		TradeRecord record = new TradeRecord();
 		record.setTradeId("T1");
@@ -42,8 +44,9 @@ public class TradeStoreServiceTest {
 		service.createRecord(record);
 	}
 
-	// case -2 where existing record version and new record version is same.
+	
 	@Test
+	@DisplayName("case -2 where existing record version and new record version is same.")
 	public void createRecord2() throws TradeStoreValidityException, ParseException {
 		TradeRecord record = new TradeRecord();
 		record.setTradeId("T1");
@@ -55,9 +58,9 @@ public class TradeStoreServiceTest {
 		service.createRecord(record);
 	}
 
-	// case -3 where existing record version and new record version is lower than
-	// existing
+
 	@Test
+	@DisplayName("case -3 where existing record version and new record version is lower than")
 	public void createRecord3() {
 		TradeRecord record = new TradeRecord();
 		record.setTradeId("T1");
@@ -78,8 +81,9 @@ public class TradeStoreServiceTest {
 		}
 	}
 
-	// case -4 where existing record version and new record version is higher than existing
+
 	@Test
+	@DisplayName("case -4 where existing record version and new record version is higher than existing")
 	public void createRecord4() {
 		TradeRecord record = new TradeRecord();
 		record.setTradeId("T1");
@@ -100,8 +104,9 @@ public class TradeStoreServiceTest {
 		}
 	}
 
-	// case -5 where existing record version and new record version is same as existing but maturity date is in past.
+
 	@Test
+	@DisplayName("case -5 where existing record version and new record version is same as existing but maturity date is in past.")
 	public void createRecord5() {
 		
 		Calendar cal = Calendar.getInstance();
@@ -129,8 +134,9 @@ public class TradeStoreServiceTest {
 		}
 	}
 	
-	// case -6 where existing record version and new record version is higher than existing
+	 
 	@Test
+	@DisplayName("case -6 where existing record version and new record version is higher than existing")
 	public void createRecord6() {
 		TradeRecord record = new TradeRecord();
 		record.setTradeId("T1");
