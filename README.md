@@ -2,8 +2,9 @@
 
 1) git clone https://github.com/vkoppara/tradestore.git
 2) mvnw.cmd clean install
-3) mvnw.cmd test
+3) mvnw.cmd test site  #for junit and reports
 4) Port 8443 (https) is opened for accessing the services
+
 
 
 # Service EndPoints
