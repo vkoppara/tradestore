@@ -11,6 +11,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.venkata.tradestore.controller.TradeController;
 
+/**
+ * TradeStoreApplicationTests
+ * @author vkopp
+ *
+ */
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
 class TradestoreApplicationTests {

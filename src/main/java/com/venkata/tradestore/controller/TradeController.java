@@ -19,6 +19,10 @@ import com.venkata.tradestore.entity.TradeRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * @author vkopp
+ *
+ */
 @RestController
 public class TradeController {
 	
@@ -30,6 +34,11 @@ public class TradeController {
 	private TradeStoreService tsbLayer;
 	
 
+	/**
+	 * This is a rest controller method to retrieve all the trade records
+	 * httpmethod: GET and produces a json output.
+	 * @return
+	 */
 	@Intercepted
 	@GetMapping(path="/tradeRecords", produces="application/json")
 	public List<TradeRecord> getTradeRecords(){
@@ -38,6 +47,12 @@ public class TradeController {
 		
 	}
 	
+	/**
+	 * This is a rest controller method to retreive trade records for the given tradeId.
+	 * httpmethod: GET and produces a json output.
+	 * @param tradeId
+	 * @return
+	 */
 	@Intercepted
 	@GetMapping(path="/tradeRecords/{tradeId}", produces="application/json")
 	public List<TradeRecord> getTradeRecordByTradeId(@PathVariable String tradeId){
@@ -45,6 +60,16 @@ public class TradeController {
 		return tsbLayer.getTradeRecordByTradeId(tradeId);
 	}
 	
+	/**
+	 * This is a rest controller method called to update/insert a trade records,
+	 * it updates if the input record version is matching with the last inserted record's version
+	 * it inserts if the input record version is latest.
+	 * it also do pre and post validate the request. 
+	 * @param record
+	 * @return
+	 * @throws TradeStoreValidityException
+	 * @throws ParseException
+	 */
 	@Intercepted
 	@PostMapping(path="/tradeRecords",consumes="application/json",produces="application/json")
 	public Response createRecord(@RequestBody TradeRecord record) throws TradeStoreValidityException, ParseException {

@@ -3,6 +3,12 @@ package com.venkata.tradestore.entity;
 import java.io.Serializable;
 import java.util.Objects;
 
+/**
+ * This is a primary key equivalent class
+ * TradeId and Version are the composite primary keys.
+ * @author vkopp
+ *
+ */
 public class TradePK implements Serializable{
 	
 

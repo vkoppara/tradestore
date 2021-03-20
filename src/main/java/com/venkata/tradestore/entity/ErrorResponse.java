@@ -2,6 +2,11 @@ package com.venkata.tradestore.entity;
 
 import java.util.List;
 
+/**
+ * ErrorResponse is to build json responses during failures.
+ * @author vkopp
+ *
+ */
 public class ErrorResponse {
 	  
     private String message;

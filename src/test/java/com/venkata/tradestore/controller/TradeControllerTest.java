@@ -22,6 +22,11 @@ import com.venkata.tradestore.entity.TradeRecord;
 
 
 
+/**
+ * TradeController JUnit tests
+ * @author vkopp
+ *
+ */
 @RunWith(MockitoJUnitRunner.class)
 @WebMvcTest(value  = TradeController.class)
 public class TradeControllerTest  {

@@ -12,11 +12,20 @@ import org.springframework.web.context.request.WebRequest;
 
 import com.venkata.tradestore.entity.ErrorResponse;
 
+/**
+ * @author vkopp
+ *
+ */
 @ControllerAdvice
 @RestController
 public class TradeStoreExceptionHandler {
 	
 	    
+	/**
+	 * @param ex
+	 * @param request
+	 * @return
+	 */
 	@ExceptionHandler(TradeStoreValidityException.class)
 	public final ResponseEntity<ErrorResponse> handleValidityErrors(TradeStoreValidityException ex, WebRequest request){		
 		ErrorResponse response = new ErrorResponse();

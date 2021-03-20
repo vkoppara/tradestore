@@ -1,5 +1,10 @@
 package com.venkata.tradestore.entity;
 
+/**
+ * Response is used to generate success json responses
+ * @author vkopp
+ *
+ */
 public class Response {
 	
 	private String tradeId;

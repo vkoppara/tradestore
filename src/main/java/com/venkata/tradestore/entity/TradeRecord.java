@@ -15,6 +15,11 @@ import org.springframework.data.annotation.CreatedDate;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 
+/**
+ * TradeRecord is the main entity class to store the trade records.
+ * @author vkopp
+ *
+ */
 @Entity
 @IdClass(TradePK.class)
 public class TradeRecord {

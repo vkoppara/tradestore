@@ -22,6 +22,11 @@ import com.venkata.tradestore.dao.TradeRecordRepo;
 import com.venkata.tradestore.entity.TradeRecord;
 
 
+/**
+ * TradeStore Service Junit cases.
+ * @author vkopp
+ *
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class TradeStoreServiceTest {
 

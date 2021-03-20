@@ -11,6 +11,10 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 
+/**
+ * @author vkopp
+ *
+ */
 @Configuration
 @EnableAspectJAutoProxy
 @Aspect
@@ -19,6 +23,14 @@ public class TradeStoreConfiguration {
 	
 	private static final Logger logger = LoggerFactory.getLogger(TradeStoreConfiguration.class);
 
+	/**
+	 * This an AOP interceptor method called for the methods annotated with Intercepted
+	 * This method logs the timetaken by the methods in milliseconds 
+	 * @param proccedingJointPoint
+	 * @param intercepted
+	 * @return
+	 * @throws Throwable
+	 */
 	@Around("@annotation(intercepted)")
 	public Object profileAllMethods(ProceedingJoinPoint proccedingJointPoint, Intercepted intercepted) throws Throwable{
 		try {
