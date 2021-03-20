@@ -90,6 +90,7 @@
 9. Maven build tool has been used to build the application.
 10. Junits covers all the insert and update scenarios. The developement was not done with TDD.
 11. AOP has been used to intercept and to log the time taken by each method.
+12. Loggers (logback) has been used in this program.
 
 # Next Steps:
 1. Create a Docker Image and plug into a CI/CD pipeline
