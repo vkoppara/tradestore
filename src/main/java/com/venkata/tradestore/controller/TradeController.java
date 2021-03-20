@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.venkata.tradestore.business.TradeStoreService;
 import com.venkata.tradestore.business.TradeStoreValidityException;
+import com.venkata.tradestore.config.Intercepted;
 import com.venkata.tradestore.entity.Response;
 import com.venkata.tradestore.entity.TradeRecord;
 
@@ -29,6 +30,7 @@ public class TradeController {
 	private TradeStoreService tsbLayer;
 	
 
+	@Intercepted
 	@GetMapping(path="/tradeRecords", produces="application/json")
 	public List<TradeRecord> getTradeRecords(){
 		logger.info("Inside getTradeRecords");
@@ -36,13 +38,15 @@ public class TradeController {
 		
 	}
 	
+	@Intercepted
 	@GetMapping(path="/tradeRecords/{tradeId}", produces="application/json")
 	public List<TradeRecord> getTradeRecordByTradeId(@PathVariable String tradeId){
 		logger.info("Inside getTradeRecordByTradeId");
 		return tsbLayer.getTradeRecordByTradeId(tradeId);
 	}
 	
-	@PostMapping(path="/tradeRecords",consumes="application/json")
+	@Intercepted
+	@PostMapping(path="/tradeRecords",consumes="application/json",produces="application/json")
 	public Response createRecord(@RequestBody TradeRecord record) throws TradeStoreValidityException, ParseException {
 		logger.info("Inside createRecord");
 		Response response = new Response();

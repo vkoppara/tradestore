@@ -37,7 +37,7 @@ public class TradeStoreService {
 		}
 	}
 
-	private void postValidate(TradeRecord record, TradeRecord existingRecord) throws TradeStoreValidityException {
+	private void postValidate(TradeRecord record, TradeRecord existingRecord) throws TradeStoreValidityException {		
 		if(existingRecord!=null) {			
 			if(existingRecord.getVersion()>record.getVersion()) {
 				throw new TradeStoreValidityException("version is less than existing.. cannot be inserted/updated");
@@ -65,6 +65,7 @@ public class TradeStoreService {
 			TradeRecord existingRecord = repo.findTop1ByTradeIdOrderByVersionDesc(record.getTradeId());
 			this.postValidate(record,existingRecord);
 			repo.save(record);
+			logger.debug("Record has been saved/updated {}",record.getTradeId());
 		}catch(Exception e) {
 			logger.error("Error Occurred", e);
 			throw e;

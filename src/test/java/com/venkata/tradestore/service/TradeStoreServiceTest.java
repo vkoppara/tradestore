@@ -1,45 +1,154 @@
 package com.venkata.tradestore.service;
 
-import static org.mockito.Mockito.doCallRealMethod;
-import static org.mockito.Mockito.doNothing;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.doReturn;
 
 import java.text.ParseException;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import com.venkata.tradestore.business.TradeStoreService;
 import com.venkata.tradestore.business.TradeStoreValidityException;
-import com.venkata.tradestore.controller.TradeController;
 import com.venkata.tradestore.dao.TradeRecordRepo;
 import com.venkata.tradestore.entity.TradeRecord;
 
-@RunWith(SpringRunner.class)
-@WebMvcTest(value  = TradeStoreService.class)
-public class TradeStoreServiceTest {
-	
 
-	@MockBean
-	private TradeRecordRepo repo;
-	
+@RunWith(MockitoJUnitRunner.class)
+public class TradeStoreServiceTest {
+
 	@InjectMocks
-	private TradeStoreService service;
-	
+	private TradeStoreService service = new TradeStoreService();
+
+	private TradeRecordRepo repo = Mockito.mock(TradeRecordRepo.class);
+
+	// case -1 No existing record
 	@Test
-	public void createRecord() throws TradeStoreValidityException, ParseException {
+	public void createRecord1() throws TradeStoreValidityException, ParseException {
 		TradeRecord record = new TradeRecord();
 		record.setTradeId("T1");
 		record.setVersion(1);
 		record.setMaturityDate(new Date());
-  	    Mockito.when(repo.findTop1ByTradeIdOrderByVersionDesc(Mockito.anyString())).thenReturn(record);
-  	    Mockito.when(repo.save(Mockito.any(TradeRecord.class))).thenReturn(null);
-  	   // service.createRecord(record);
+		doReturn(null).when(repo).findTop1ByTradeIdOrderByVersionDesc(Mockito.anyString());
+		doReturn(null).when(repo).save(Mockito.any(TradeRecord.class));
+		ReflectionTestUtils.setField(service, "repo", repo);
+		service.createRecord(record);
+	}
+
+	// case -2 where existing record version and new record version is same.
+	@Test
+	public void createRecord2() throws TradeStoreValidityException, ParseException {
+		TradeRecord record = new TradeRecord();
+		record.setTradeId("T1");
+		record.setVersion(1);
+		record.setMaturityDate(new Date());
+		doReturn(record).when(repo).findTop1ByTradeIdOrderByVersionDesc(Mockito.anyString());
+		doReturn(null).when(repo).save(Mockito.any(TradeRecord.class));
+		ReflectionTestUtils.setField(service, "repo", repo);
+		service.createRecord(record);
+	}
+
+	// case -3 where existing record version and new record version is lower than
+	// existing
+	@Test
+	public void createRecord3() {
+		TradeRecord record = new TradeRecord();
+		record.setTradeId("T1");
+		record.setVersion(1);
+		record.setMaturityDate(new Date());
+		TradeRecord existingrecord = new TradeRecord();
+		existingrecord.setTradeId("T1");
+		existingrecord.setVersion(2);
+		existingrecord.setMaturityDate(new Date());
+		doReturn(existingrecord).when(repo).findTop1ByTradeIdOrderByVersionDesc(Mockito.anyString());
+		doReturn(null).when(repo).save(Mockito.any(TradeRecord.class));
+		ReflectionTestUtils.setField(service, "repo", repo);
+		try {
+			service.createRecord(record);
+			fail("Didn't throw an error");
+		} catch (Exception e) {
+			assertTrue(e.getMessage().contains("version is less than existing"));
+		}
+	}
+
+	// case -4 where existing record version and new record version is higher than existing
+	@Test
+	public void createRecord4() {
+		TradeRecord record = new TradeRecord();
+		record.setTradeId("T1");
+		record.setVersion(2);
+		record.setMaturityDate(new Date());
+		TradeRecord existingrecord = new TradeRecord();
+		existingrecord.setTradeId("T1");
+		existingrecord.setVersion(1);
+		existingrecord.setMaturityDate(new Date());
+		doReturn(existingrecord).when(repo).findTop1ByTradeIdOrderByVersionDesc(Mockito.anyString());
+		doReturn(null).when(repo).save(Mockito.any(TradeRecord.class));
+		ReflectionTestUtils.setField(service, "repo", repo);
+		try {
+			service.createRecord(record);
+
+		} catch (Exception e) {
+			fail("Throwed an exception");
+		}
+	}
+
+	// case -5 where existing record version and new record version is same as existing but maturity date is in past.
+	@Test
+	public void createRecord5() {
+		
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(new Date());
+		cal.add(Calendar.DATE, -2);
+		Date dateBefore2Days = cal.getTime();
+		
+		
+		TradeRecord record = new TradeRecord();
+		record.setTradeId("T1");
+		record.setVersion(1);
+		record.setMaturityDate(dateBefore2Days);
+		TradeRecord existingrecord = new TradeRecord();
+		existingrecord.setTradeId("T1");
+		existingrecord.setVersion(1);
+		existingrecord.setMaturityDate(new Date());
+		doReturn(existingrecord).when(repo).findTop1ByTradeIdOrderByVersionDesc(Mockito.anyString());
+		doReturn(null).when(repo).save(Mockito.any(TradeRecord.class));
+		ReflectionTestUtils.setField(service, "repo", repo);
+		try {
+			service.createRecord(record);
+			fail("Didn't throw an exception");
+		} catch (Exception e) {
+			assertTrue(e.getMessage().contains("The Maturity Date Cannot be Older than Current Date"));
+		}
+	}
+	
+	// case -6 where existing record version and new record version is higher than existing
+	@Test
+	public void createRecord6() {
+		TradeRecord record = new TradeRecord();
+		record.setTradeId("T1");
+		record.setVersion(0);
+		record.setMaturityDate(new Date());
+		TradeRecord existingrecord = new TradeRecord();
+		existingrecord.setTradeId("T1");
+		existingrecord.setVersion(1);
+		existingrecord.setMaturityDate(new Date());
+		doReturn(existingrecord).when(repo).findTop1ByTradeIdOrderByVersionDesc(Mockito.anyString());
+		doReturn(null).when(repo).save(Mockito.any(TradeRecord.class));
+		ReflectionTestUtils.setField(service, "repo", repo);
+		try {
+			service.createRecord(record);
+			fail("Didn't throw an exception");
+		} catch (Exception e) {
+			assertTrue(e.getMessage().contains("Either TradeId or Version is invalid"));
+		}
 	}
 
 }
