@@ -10,7 +10,7 @@
 1) HttpMethod: POST URL: https://localhost:8443/tradeRecords
    Headers: Content-Type=application/json
    ```javascript
-   Sample request Body: 
+   Example request Body: 
    {
     "tradeId": "T1",
     "version": 1,
@@ -18,12 +18,52 @@
     "bookId": "B1",
     "maturityDate": "21/03/2021"    
    }
-   Response:
+   Success Response:
    {
     "tradeId": "T1",
     "version": 1,
     "statusMessage": "Inserted/Updated Successfully"
     }
+    Failure Response:
+    {
+    "message": "Failed",
+    "details": [
+        "Either TradeId or Version is invalid"
+       ]
+    }
     ```
 
-2) 
+2) HttpMethod: GET URL: https://localhost:8443/tradeRecords
+   Headers: None
+   ```javascript
+   Example Response:
+   [
+    {
+        "tradeId": "T1",
+        "version": 1,
+        "counterPartyId": "CP-1",
+        "bookId": "B1",
+        "maturityDate": "10/03/2021",
+        "createdDate": "19/03/2021",
+        "expired": false
+    },
+    {
+        "tradeId": "T2",
+        "version": 3,
+        "counterPartyId": "CP-1",
+        "bookId": "B1",
+        "maturityDate": "21/03/2021",
+        "createdDate": "20/03/2021",
+        "expired": false
+    },
+    {
+        "tradeId": "T4",
+        "version": 3,
+        "counterPartyId": "CP-1",
+        "bookId": "B1",
+        "maturityDate": "21/03/2021",
+        "createdDate": "20/03/2021",
+        "expired": false
+    }
+   ]
+   ```
