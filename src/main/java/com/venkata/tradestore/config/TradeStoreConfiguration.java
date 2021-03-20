@@ -34,10 +34,9 @@ public class TradeStoreConfiguration {
 			logger.info("Execution time of {}.{}::{}ms",className,methodName,timeTaken);
 			return result;
 		}catch(Throwable e) {
-			System.out.println(e.getMessage());
-			e.printStackTrace();
+			throw e;
 		}
-		return null;
 	}
+	
 	
 }
