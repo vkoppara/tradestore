@@ -103,7 +103,8 @@
 ![image](https://user-images.githubusercontent.com/49525515/111865606-16741600-898e-11eb-9f3a-1d554471c780.png)
 
 # Junit Test Report
-![image](https://user-images.githubusercontent.com/49525515/111867466-1c6ff400-899a-11eb-896d-2b67f0a66143.png)
+![image](https://user-images.githubusercontent.com/49525515/111904532-78f01380-8a6d-11eb-8e75-775d3908813e.png)
+
 
 
 
