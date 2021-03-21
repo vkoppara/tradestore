@@ -123,3 +123,5 @@
 
 # Next Steps:
 1. Create a Docker Image and plug into a CI/CD pipeline
+2. oAuth can be implemented for authorizing/authenticating the users that call the rest services
+3. Junits can be implemented to cover the scenarios integrating a temporary database.(e.g for testing JPA interface methods)
