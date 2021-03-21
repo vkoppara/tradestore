@@ -72,7 +72,7 @@
    ]
    ```
 
-3) HttpMethod: GET URL: https://localhost:8443/tradeRecords/<TradeId>
+3) HttpMethod: GET URL: https://localhost:8443/tradeRecords/[TradeId]
    Headers: None
    ```javascript
    Example Response:
