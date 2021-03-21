@@ -7,6 +7,7 @@ import javax.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import com.venkata.tradestore.entity.TradePK;
 import com.venkata.tradestore.entity.TradeRecord;
@@ -15,6 +16,7 @@ import com.venkata.tradestore.entity.TradeRecord;
  * @author vkopp
  *
  */
+@Repository
 public interface TradeRecordRepo extends JpaRepository<TradeRecord, TradePK>{
 
 	List<TradeRecord> findByTradeId(String tradeId);

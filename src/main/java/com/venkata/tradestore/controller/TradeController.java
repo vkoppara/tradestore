@@ -4,6 +4,8 @@ import java.text.ParseException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,9 +43,9 @@ public class TradeController {
 	 */
 	@Intercepted
 	@GetMapping(path="/tradeRecords", produces="application/json")
-	public List<TradeRecord> getTradeRecords(){
+	public ResponseEntity<List<TradeRecord>> getTradeRecords(){
 		logger.info("Inside getTradeRecords");
-		return tsbLayer.getTradeRecords();
+		return new ResponseEntity<>(tsbLayer.getTradeRecords(), HttpStatus.OK);
 		
 	}
 	
@@ -55,9 +57,9 @@ public class TradeController {
 	 */
 	@Intercepted
 	@GetMapping(path="/tradeRecords/{tradeId}", produces="application/json")
-	public List<TradeRecord> getTradeRecordByTradeId(@PathVariable String tradeId){
+	public ResponseEntity<List<TradeRecord>> getTradeRecordByTradeId(@PathVariable String tradeId){
 		logger.info("Inside getTradeRecordByTradeId");
-		return tsbLayer.getTradeRecordByTradeId(tradeId);
+		return new ResponseEntity<>(tsbLayer.getTradeRecordByTradeId(tradeId), HttpStatus.OK);
 	}
 	
 	/**
@@ -72,14 +74,14 @@ public class TradeController {
 	 */
 	@Intercepted
 	@PostMapping(path="/tradeRecords",consumes="application/json",produces="application/json")
-	public Response createRecord(@RequestBody TradeRecord record) throws TradeStoreValidityException, ParseException {
+	public ResponseEntity<Response> createRecord(@RequestBody TradeRecord record) throws TradeStoreValidityException, ParseException {
 		logger.info("Inside createRecord");
 		Response response = new Response();
 		response.setTradeId(record.getTradeId());
 		response.setVersion(record.getVersion());		
 		response.setStatusMessage("Inserted/Updated Successfully");
 		tsbLayer.createRecord(record);
-		return response;
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	
 	}
 	

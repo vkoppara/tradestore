@@ -5,8 +5,10 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.doReturn;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,6 +19,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import com.venkata.tradestore.business.TradeStoreService;
+import com.venkata.tradestore.business.TradeStoreServiceImpl;
 import com.venkata.tradestore.business.TradeStoreValidityException;
 import com.venkata.tradestore.dao.TradeRecordRepo;
 import com.venkata.tradestore.entity.TradeRecord;
@@ -31,7 +34,7 @@ import com.venkata.tradestore.entity.TradeRecord;
 public class TradeStoreServiceTest {
 
 	@InjectMocks
-	private TradeStoreService service = new TradeStoreService();
+	private TradeStoreService service = new TradeStoreServiceImpl();
 
 	private TradeRecordRepo repo = Mockito.mock(TradeRecordRepo.class);
 
@@ -160,6 +163,34 @@ public class TradeStoreServiceTest {
 		} catch (Exception e) {
 			assertTrue(e.getMessage().contains("Either TradeId or Version is invalid"));
 		}
+	}
+	
+	@Test
+	@DisplayName("TradeStoreServiceTests getTradeRecords")
+	public void getTradeRecords() {
+		List<TradeRecord> tradeRecords = new ArrayList<TradeRecord>();
+		TradeRecord tr = new TradeRecord();
+		tr.setTradeId("101");
+		tr.setVersion(1);
+		tradeRecords.add(tr);
+		doReturn(tradeRecords).when(repo).findAll();		
+		ReflectionTestUtils.setField(service, "repo", repo);
+		assertTrue(service.getTradeRecords()==tradeRecords);
+		
+	}
+	
+	@Test
+	@DisplayName("TradeStoreServiceTests getTradeRecordByTradeId")
+	public void getTradeRecordByTradeId() {
+		List<TradeRecord> tradeRecords = new ArrayList<TradeRecord>();
+		TradeRecord tr = new TradeRecord();
+		tr.setTradeId("101");
+		tr.setVersion(1);
+		tradeRecords.add(tr);
+		doReturn(tradeRecords).when(repo).findByTradeId(Mockito.anyString());		
+		ReflectionTestUtils.setField(service, "repo", repo);
+		assertTrue(service.getTradeRecordByTradeId("101")==tradeRecords);
+		
 	}
 
 }
