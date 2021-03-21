@@ -18,11 +18,11 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import com.venkata.tradestore.business.TradeStoreService;
-import com.venkata.tradestore.business.TradeStoreServiceImpl;
-import com.venkata.tradestore.business.TradeStoreValidityException;
 import com.venkata.tradestore.dao.TradeRecordRepo;
 import com.venkata.tradestore.entity.TradeRecord;
+import com.venkata.tradestore.exception.TradeStoreValidityException;
+import com.venkata.tradestore.service.TradeStoreService;
+import com.venkata.tradestore.service.TradeStoreServiceImpl;
 
 
 /**

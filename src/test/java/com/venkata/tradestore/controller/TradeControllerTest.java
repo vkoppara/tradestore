@@ -21,8 +21,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import com.venkata.tradestore.business.TradeStoreServiceImpl;
 import com.venkata.tradestore.entity.TradeRecord;
+import com.venkata.tradestore.service.TradeStoreServiceImpl;
 
 
 

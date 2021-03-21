@@ -1,4 +1,4 @@
-package com.venkata.tradestore.business;
+package com.venkata.tradestore.service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import com.venkata.tradestore.dao.TradeRecordRepo;
 import com.venkata.tradestore.entity.TradeRecord;
+import com.venkata.tradestore.exception.TradeStoreValidityException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

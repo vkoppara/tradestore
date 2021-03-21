@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.venkata.tradestore.business.TradeStoreService;
-import com.venkata.tradestore.business.TradeStoreValidityException;
 import com.venkata.tradestore.config.Intercepted;
 import com.venkata.tradestore.entity.Response;
 import com.venkata.tradestore.entity.TradeRecord;
+import com.venkata.tradestore.exception.TradeStoreValidityException;
+import com.venkata.tradestore.service.TradeStoreService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
