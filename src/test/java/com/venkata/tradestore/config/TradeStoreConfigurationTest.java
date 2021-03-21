@@ -8,22 +8,15 @@ import java.lang.annotation.Annotation;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.junit.Rule;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.mockito.junit.MockitoRule;
 
-import com.venkata.tradestore.entity.TradeRecord;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TradeStoreConfigurationTest {
 	
-    @Rule
-    public MockitoRule mockitoRule = MockitoJUnit.rule();
     
     private ProceedingJoinPoint proceedingJoinPoint = Mockito.mock(ProceedingJoinPoint.class);
     private MethodSignature methodSignature = Mockito.mock(MethodSignature.class);
