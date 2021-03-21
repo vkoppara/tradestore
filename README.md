@@ -103,8 +103,7 @@
 ![image](https://user-images.githubusercontent.com/49525515/111865606-16741600-898e-11eb-9f3a-1d554471c780.png)
 
 # Junit Test Report
-![image](https://user-images.githubusercontent.com/49525515/111904532-78f01380-8a6d-11eb-8e75-775d3908813e.png)
-
+![image](https://user-images.githubusercontent.com/49525515/111905667-c9b63b00-8a72-11eb-9f59-34628af13553.png)
 
 
 
@@ -118,7 +117,7 @@
 7. A self-signed certificate is being used for secured http connection. The service endpoints use https and port 8443 port.
 8. A h2 database has been used for storing the trade store records. It is in memory database, rebooting of the application will clean the previously inserted records.
 9. Maven build tool has been used to build the application.
-10. Junits covers for all scenarios (that includes get/insert/update and JPA repository methods). The developement was not done with TDD.
+10. Junits covers for all scenarios (that includes get/insert/update, JPA repository and AOP methods). The developement was not done with TDD.
 11. AOP has been used to intercept and to log the time taken by each method.
 12. Loggers (logback) has been used in this program. Both Console and File loggings are enabled.
 
