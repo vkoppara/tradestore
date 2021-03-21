@@ -4,7 +4,9 @@
 2) mvnw.cmd clean install
 3) mvnw.cmd test 
 4) mvnw.cmd surefire-report:report  #for junit and reports
-5) Port 8443 (https) is opened for accessing the services
+5) mvnw spring-boot:run
+6) Port 8443 (https) is opened for accessing the services
+7) https://localhost:8443/h2-console (for h2-console) - use url: jdbc:h2:mem:trade
 
 
 
@@ -69,8 +71,40 @@
     }
    ]
    ```
+
+3) HttpMethod: GET URL: https://localhost:8443/tradeRecords/[TradeId]
+   Headers: None
+   ```javascript
+   Example Response:
+   [
+    {
+        "tradeId": "T1",
+        "version": 1,
+        "counterPartyId": "CP-1",
+        "bookId": "B1",
+        "maturityDate": "10/03/2021",
+        "createdDate": "19/03/2021",
+        "expired": false
+    },
+   ]
+   ```
+
+# Response Messages and Scnearios
+
+| Scneario      | Message |   Http Response Code |
+| ------------- | ------------- | ------------- |
+| Input record's Maturity date is in past | The Maturity Date Cannot be Older than Current Date  | 500 |
+| Input record's tradeId is empty or null or the versios is <= 0   | Either TradeId or Version is invalid  | 500 |
+| Input record's version is less than the one existing in the system | version is less than existing.. cannot be inserted/updated | 500 |
+| Invalid format error e.g. Input date is not the format 'dd/MM/YYYY' | Bad Request | 400 |
+| Success | Inserted/Updated Successfully | 200 |
+   
+# Table records snapshot after the cron job execution
+![image](https://user-images.githubusercontent.com/49525515/111865606-16741600-898e-11eb-9f3a-1d554471c780.png)
+
 # Junit Test Report
-![image](https://user-images.githubusercontent.com/49525515/111860435-6f7f8200-896d-11eb-8e5a-62472a5327d8.png)
+![image](https://user-images.githubusercontent.com/49525515/111867466-1c6ff400-899a-11eb-896d-2b67f0a66143.png)
+
 
 
 # Assumptions & Notes
@@ -80,7 +114,14 @@
 4. A job runs every day at 12pm to update the expried flag based on if the maturity date is less than current date.
 5. Only Json format is allowed to fetch the record or insert/update the records.
 6. All the dates are shown in IST and dd/MM/YYYY format.
-7. A self-signed certificate is being used for secured http connection. The serice endpoints use https and port 8443 port.
+7. A self-signed certificate is being used for secured http connection. The service endpoints use https and port 8443 port.
 8. A h2 database has been used for storing the trade store records. It is in memory database, rebooting of the application will clean the previously inserted records.
 9. Maven build tool has been used to build the application.
 10. Junits covers all the insert and update scenarios. The developement was not done with TDD.
+11. AOP has been used to intercept and to log the time taken by each method.
+12. Loggers (logback) has been used in this program. Both Console and File loggings are enabled.
+
+# Next Steps:
+1. Create a Docker Image and plug into a CI/CD pipeline
+2. oAuth can be implemented for authorizing/authenticating the users that call the rest services
+3. Junits can be implemented to cover the scenarios integrating a temporary database.(e.g for testing JPA interface methods)
