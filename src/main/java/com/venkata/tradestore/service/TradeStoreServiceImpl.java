@@ -116,6 +116,7 @@ public class TradeStoreServiceImpl implements TradeStoreService {
 	 */
 	@Override
 	public void updateExpire() {
+		logger.info("Updating the expired flag..");
 		repo.updateExpire();
 		
 	}

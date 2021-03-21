@@ -38,6 +38,20 @@ public class TradeRecord {
 	private Boolean expired;
 	
 	
+	public TradeRecord(String tradeId, int version, String counterPartyId, String bookId, Date maturityDate) throws ParseException {
+		super();
+		this.tradeId = tradeId;
+		this.version = version;
+		this.counterPartyId = counterPartyId;
+		this.bookId = bookId;
+		this.maturityDate = maturityDate;	
+		this.setCreatedDate();
+	}
+	
+	public TradeRecord() {
+		super();
+	}
+	
 	public String getTradeId() {
 		return tradeId;
 	}
@@ -90,6 +104,14 @@ public class TradeRecord {
         this.createdDate = today;
         expired=false;
     }
+
+	
+	@Override
+	public String toString() {
+		return "TradeRecord [tradeId=" + tradeId + ", version=" + version + ", counterPartyId=" + counterPartyId
+				+ ", bookId=" + bookId + ", maturityDate=" + maturityDate + ", createdDate=" + createdDate
+				+ ", expired=" + expired + "]";
+	}
 	
 	
 

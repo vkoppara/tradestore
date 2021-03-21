@@ -1,5 +1,17 @@
-{"properties": [{
-  "name": "scheduling.cron",
-  "type": "java.lang.String",
-  "description": "A description for 'scheduling.cron'"
-}]}
+{"properties": [
+  {
+    "name": "scheduling.cron",
+    "type": "java.lang.String",
+    "description": "A description for 'scheduling.cron'"
+  },
+  {
+    "name": "scheduling.cron",
+    "type": "java.lang.String",
+    "description": "A description for 'scheduling.cron'"
+  },
+  {
+    "name": "security.require-ssl",
+    "type": "java.lang.String",
+    "description": "A description for 'security.require-ssl'"
+  }
+]}

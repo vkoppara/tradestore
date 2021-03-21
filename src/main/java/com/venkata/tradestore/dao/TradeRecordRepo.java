@@ -27,7 +27,7 @@ public interface TradeRecordRepo extends JpaRepository<TradeRecord, TradePK>{
 	 * This is a custom query to set the expired=true the trade records, used by the cron job
 	 */
 	@Transactional
-	@Modifying
+	@Modifying(clearAutomatically = true)
 	@Query("Update TradeRecord set expired=true where expired=false and maturityDate < CURRENT_DATE() ")
 	void updateExpire();
 	

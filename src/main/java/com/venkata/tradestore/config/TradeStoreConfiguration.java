@@ -22,6 +22,8 @@ import org.springframework.util.StopWatch;
 public class TradeStoreConfiguration {
 	
 	private static final Logger logger = LoggerFactory.getLogger(TradeStoreConfiguration.class);
+	
+		
 
 	/**
 	 * This an AOP interceptor method called for the methods annotated with Intercepted
@@ -49,6 +51,7 @@ public class TradeStoreConfiguration {
 			throw e;
 		}
 	}
+	
 	
 	
 }
