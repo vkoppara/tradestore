@@ -105,6 +105,10 @@
 # Junit Test Report
 ![image](https://user-images.githubusercontent.com/49525515/111905667-c9b63b00-8a72-11eb-9f59-34628af13553.png)
 
+*Code Coverage Report:*
+![image](https://user-images.githubusercontent.com/49525515/111939430-43d9d480-8af2-11eb-9542-6623f59ea555.png)
+
+
 
 
 # Assumptions & Notes
