@@ -54,6 +54,9 @@ public class TradeController {
 			System.out.println("empty");
 			count=1;
 		} 
+		if(count==5) {
+			request.getSession().invalidate();
+		}
 		
 		
 		List<TradeRecord> response = tsbLayer.getTradeRecords();
