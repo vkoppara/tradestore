@@ -3,6 +3,8 @@ package com.venkata.tradestore.controller;
 import java.text.ParseException;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,9 +45,23 @@ public class TradeController {
 	 */
 	@Intercepted
 	@GetMapping(path="/tradeRecords", produces="application/json")
-	public ResponseEntity<List<TradeRecord>> getTradeRecords(){
+	public ResponseEntity<List<TradeRecord>> getTradeRecords(HttpServletRequest request){
 		logger.info("Inside getTradeRecords");
-		return new ResponseEntity<>(tsbLayer.getTradeRecords(), HttpStatus.OK);
+		logger.info("Session:"+request.getSession().getId());
+		
+		Integer count= (Integer) request.getSession().getAttribute("count");
+		if(count==null) {
+			System.out.println("empty");
+			count=1;
+		} 
+		
+		
+		List<TradeRecord> response = tsbLayer.getTradeRecords();
+		response.get(0).setBookId(count+"");
+		request.getSession().setAttribute("count", ++count);
+		ResponseEntity<List<TradeRecord>> responseEntity = new ResponseEntity<>(response, HttpStatus.OK);
+		
+		return responseEntity;
 		
 	}
 	

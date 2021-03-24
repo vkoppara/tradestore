@@ -6,8 +6,13 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
+import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
+import org.springframework.session.web.http.HeaderHttpSessionIdResolver;
+import org.springframework.session.web.http.HttpSessionIdResolver;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 
@@ -19,10 +24,20 @@ import org.springframework.util.StopWatch;
 @EnableAspectJAutoProxy
 @Aspect
 @Component
+@EnableRedisHttpSession
 public class TradeStoreConfiguration {
 	
 	private static final Logger logger = LoggerFactory.getLogger(TradeStoreConfiguration.class);
 	
+	@Bean
+	public LettuceConnectionFactory connectionFactory() {
+		return new LettuceConnectionFactory(); 
+	}
+
+	@Bean
+	public HttpSessionIdResolver httpSessionIdResolver() {
+		return HeaderHttpSessionIdResolver.xAuthToken(); 
+	}
 		
 
 	/**
