@@ -17,6 +17,7 @@ import org.springframework.session.web.http.HeaderHttpSessionIdResolver;
 import org.springframework.session.web.http.HttpSessionIdResolver;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
+import org.springframework.core.env.Environment;
 
 /**
  * @author vkopp
@@ -30,6 +31,9 @@ import org.springframework.util.StopWatch;
 public class TradeStoreConfiguration {
 	
 	private static final Logger logger = LoggerFactory.getLogger(TradeStoreConfiguration.class);
+	
+	@Autowired
+        private Environment env;
 	
 	@Bean
 	public LettuceConnectionFactory connectionFactory() {
