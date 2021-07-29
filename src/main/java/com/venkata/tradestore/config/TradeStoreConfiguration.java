@@ -10,6 +10,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
+import org.springframework.data.redis.connection.RedisPassword;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 import org.springframework.session.web.http.HeaderHttpSessionIdResolver;
 import org.springframework.session.web.http.HttpSessionIdResolver;
@@ -31,7 +33,14 @@ public class TradeStoreConfiguration {
 	
 	@Bean
 	public LettuceConnectionFactory connectionFactory() {
-		return new LettuceConnectionFactory(); 
+		RedisStandaloneConfiguration redisConf = new RedisStandaloneConfiguration();
+                redisConf.setHostName(env.getProperty("spring.redis.host"));
+                redisConf.setPort(Integer.parseInt(env.getProperty("spring.redis.port")));
+                redisConf.setPassword(RedisPassword.of(env.getProperty("spring.redis.password")));
+
+                return new LettuceConnectionFactory(redisConf);
+		
+		//return new LettuceConnectionFactory(); 
 	}
 
 	@Bean
