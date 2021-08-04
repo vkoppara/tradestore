@@ -26,8 +26,7 @@ pipeline {
     }
    stage ("run"){
       steps{
-        echo "my name is build"
-        sh "set REDIS_HOST=${REDIS_HOST}"
+        echo "my name is build"        
         sh "mvn spring-boot:run"
       }
     }
