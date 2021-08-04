@@ -3,6 +3,9 @@ pipeline {
   tools{
     maven "Maven 3.8.1"    
   }
+  environment {
+    REDIS_HOST = ""
+  }
   stages {
     stage ("build"){
       steps{
