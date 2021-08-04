@@ -11,6 +11,9 @@ pipeline {
       }
     }
    stage ("test"){
+     when {
+       false
+     }
       steps{
         echo "my name is build"
         sh "mvn test"
