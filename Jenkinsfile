@@ -12,7 +12,9 @@ pipeline {
     }
    stage ("test"){
      when {
-       false
+       expression{
+          false
+       }
      }
       steps{
         echo "my name is build"
