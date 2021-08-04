@@ -4,7 +4,7 @@ pipeline {
     maven "Maven 3.8.1"    
   }
   environment {
-    REDIS_HOST = ""
+    REDIS_HOST = "172.18.0.4"
   }
   stages {
     stage ("build"){
@@ -27,6 +27,7 @@ pipeline {
    stage ("run"){
       steps{
         echo "my name is build"
+        sh "set REDIS_HOST=${REDIS_HOST}"
         sh "mvn spring-boot:run"
       }
     }
