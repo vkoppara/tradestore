@@ -3,12 +3,6 @@ pipeline {
   tools{
     maven "Maven 3.8.1"    
   }
-  podTemplate {
-    node("jenkins-slaves") {
-        stage('Run shell') {
-            sh 'echo hello world'
-        }
-    }
 }
   environment {
     REDIS_HOST = "172.18.0.4"
