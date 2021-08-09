@@ -5,7 +5,7 @@ pipeline {
   }
 }
   environment {
-    REDIS_HOST = "172.18.0.4"
+    REDIS_HOST = "172.18.0.4" 
   }
   stages {
     stage ("build"){
