@@ -14,24 +14,25 @@ pipeline {
             command:
             - cat
             tty: true
+          - name: kubectl
+            image: lachlanevenson/k8s-kubectl
+            command:
+            - cat
+            tty: true            
           - name: docker-cmds 
-            image: docker:1.12.6 
-            command: 
+            image: docker:1.12.6
+            command:
             - cat
             tty: true
-            env: 
-            - name: DOCKER_HOST 
-              value: tcp://localhost:2375 
-          - name: dind-daemon 
-            image: docker:1.12.6-dind 
             securityContext: 
                privileged: true 
             volumeMounts: 
-            - name: docker-graph-storage 
-              mountPath: /var/lib/docker 
+            - name: docker
+              mountPath: /var/run/docker.sock
           volumes: 
-          - name: docker-graph-storage 
-          emptyDir: {}
+          - name: docker
+            hostPath: 
+              path: /var/run/docker.sock
           dnsPolicy: "None"
           dnsConfig:
             nameservers:
@@ -40,7 +41,7 @@ pipeline {
     }
   }
   stages {
-    stage('Build') {
+   stage('Build') {
       steps {
         git url: 'https://github.com/vkoppara/tradestore.git', branch: 'main'
         container('maven') {
@@ -55,6 +56,7 @@ pipeline {
         script {
            container('docker-cmds') {
                withCredentials([usernamePassword(credentialsId: 'DOCKER_CRED', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                   writeFile file: 'Dockerfile', text: 'FROM redis'
                    def dockerImage = docker.build("vkoppara/tradestore")
                    sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
                    dockerImage.push("latest")
@@ -62,6 +64,16 @@ pipeline {
            }
         }    
       }
+    }
+    stage('Run kubectl') {
+        steps {
+            container('kubectl') {
+                withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: '11-08-2021', namespace: 'jenkins', serverUrl: 'https://192.168.1.14:6443/') {
+                    //sh "kubectl create deployment tradestore --image=vkoppara/tradestore -n jenkins"
+                    sh "kubectl apply -f k8-deployment.yaml -n jenkins"
+                }
+            }
+        }
     }
   }
 }
