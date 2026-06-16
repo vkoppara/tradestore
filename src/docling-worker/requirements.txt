@@ -1,0 +1,9 @@
+# Pin docling to a specific version once tested — ML model APIs change between releases.
+docling
+rapidocr
+onnxruntime
+asyncpg==0.30.0
+httpx==0.28.0
+pandas==2.2.3
+anthropic
+openai
