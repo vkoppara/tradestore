@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>US ETF · AQQQ · Signal</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root{
+    --navy:#0b1f3a; --navy2:#0f2b4a; --blue:#1f4e79; --steel:#2e6ca4;
+    --ink:#1a2733; --muted:#64748b; --line:#e3e9f0; --bg:#f4f7fb; --card:#ffffff;
+    --green:#2e9e6b; --green-d:#1f7d52; --gold:#c8a24b; --red:#d35454;
+    --amber:#e0a83c; --chip:#eef3f9;
+    --shadow:0 1px 2px rgba(11,31,58,.06),0 4px 14px rgba(11,31,58,.05);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    background:var(--bg);color:var(--ink);font-size:13px;line-height:1.45}
+  .app{display:grid;grid-template-columns:230px 1fr;min-height:100vh}
+
+  /* Sidebar */
+  .side{background:linear-gradient(180deg,#0b1f3a,#0a1b33);color:#c7d6e8;display:flex;flex-direction:column;padding:18px 0}
+  .brand{display:flex;gap:10px;align-items:center;padding:0 18px 18px;border-bottom:1px solid rgba(255,255,255,.08)}
+  .brand .logo{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#2e6ca4,#1f4e79);display:flex;align-items:center;justify-content:center;font-size:17px}
+  .brand h1{font-size:14px;margin:0;color:#fff;font-weight:700;letter-spacing:.2px}
+  .brand span{font-size:10.5px;color:#8fa6c0}
+  nav{padding:12px 10px;display:flex;flex-direction:column;gap:2px}
+  nav a{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;color:#bccbdf;text-decoration:none;font-size:12.5px;cursor:pointer}
+  nav a .ic{width:16px;text-align:center;opacity:.85}
+  nav a:hover{background:rgba(255,255,255,.06);color:#fff}
+  nav a.active{background:var(--steel);color:#fff;font-weight:600}
+  .src{margin-top:auto;padding:14px 18px;border-top:1px solid rgba(255,255,255,.08);font-size:11px}
+  .src h4{margin:0 0 8px;color:#8fa6c0;font-size:10px;letter-spacing:1px;text-transform:uppercase;font-weight:700}
+  .src .row{display:flex;align-items:center;gap:7px;padding:3px 0;color:#b9c8dc}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block}
+  .ok{display:flex;align-items:center;gap:7px;margin-top:10px;color:#7fd8a8;font-size:11px}
+
+  /* Main */
+  .main{display:flex;flex-direction:column;min-width:0}
+  header.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 22px;background:#fff;border-bottom:1px solid var(--line)}
+  .crumb{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--muted)}
+  .crumb b{color:var(--ink)}
+  .refresh{font-size:11px;color:var(--muted);text-align:right}
+  .refresh b{color:var(--ink)}
+  .user{display:flex;align-items:center;gap:9px}
+  .avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#c8a24b,#b08a2e);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
+  .user .nm{font-size:12.5px;font-weight:600}
+  .user .ro{font-size:10.5px;color:var(--muted)}
+
+  /* ETF header band */
+  .ehead{background:#fff;border-bottom:1px solid var(--line);padding:16px 22px 0}
+  .ehead .row1{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .ehead h2{margin:0;font-size:22px;font-weight:800;letter-spacing:-.4px}
+  .ticker{background:var(--navy);color:#fff;border-radius:7px;padding:4px 9px;font-family:ui-monospace,Menlo,monospace;font-size:12px;font-weight:700}
+  .flag{font-size:18px}
+  .elig-chip{background:#e6f6ee;color:var(--green-d);border:1px solid #bfe6d1;border-radius:20px;padding:4px 12px;font-size:11.5px;font-weight:700}
+  .ehead .meta{margin:7px 0 0;color:var(--muted);font-size:12px}
+  .ehead .meta b{color:var(--ink);font-weight:600}
+  .hbtns{margin-left:auto;display:flex;gap:8px}
+  .btn{border:1px solid var(--line);border-radius:8px;padding:8px 12px;background:#fff;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:6px}
+  .btn:hover{background:var(--chip)}
+  .btn.primary{background:var(--steel);border-color:var(--steel);color:#fff}
+  .btn.primary:hover{background:#27598a}
+
+  /* tab bar */
+  .tabbar{display:flex;gap:2px;padding:14px 22px 0;overflow-x:auto}
+  .tabbar button{border:0;background:transparent;padding:10px 13px;font-size:12.5px;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;font-weight:600}
+  .tabbar button.on{color:var(--steel);border-bottom-color:var(--steel)}
+  .tabbar button:hover{color:var(--ink)}
+
+  .wrap{padding:18px 22px 40px}
+
+  /* KPI strip */
+  .kpis{display:grid;grid-template-columns:repeat(7,1fr);gap:12px;margin-bottom:18px}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 13px;box-shadow:var(--shadow)}
+  .kpi .lbl{font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.3px;min-height:24px}
+  .kpi .val{font-size:21px;font-weight:800;margin:3px 0 2px;letter-spacing:-.5px}
+  .kpi .sub{font-size:10px;color:var(--muted)}
+  .kpi .good{color:var(--green-d)}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow)}
+  .card .hd{display:flex;align-items:center;justify-content:space-between;padding:12px 15px;border-bottom:1px solid var(--line)}
+  .card .hd h3{margin:0;font-size:13.5px;font-weight:700;display:flex;align-items:center;gap:8px}
+  .card .hd .num{width:20px;height:20px;border-radius:6px;background:var(--chip);color:var(--steel);display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:800}
+  .card .hd a, .card .hd .lk{font-size:11.5px;color:var(--steel);text-decoration:none;cursor:pointer;font-weight:600}
+  .pad{padding:15px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+  .mb16{margin-bottom:16px}
+
+  .muted{color:var(--muted)}
+  .hidden{display:none}
+  canvas{max-width:100%}
+
+  /* status pills */
+  .pill{display:inline-flex;align-items:center;gap:6px;border-radius:20px;padding:3px 10px;font-size:10.5px;font-weight:700;white-space:nowrap}
+  .pill .pd{width:7px;height:7px;border-radius:50%}
+  .pill.active{background:#e6f6ee;color:var(--green-d);border:1px solid #bfe6d1}
+  .pill.active .pd{background:var(--green)}
+  .pill.watch{background:#fbf3e0;color:#9a7b25;border:1px solid #ecdcae}
+  .pill.watch .pd{background:var(--amber)}
+  .pill.dormant{background:#eef2f7;color:var(--muted);border:1px solid var(--line)}
+  .pill.dormant .pd{background:#9fb0c4}
+
+  /* signal summary tiles */
+  .sigsum{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+  .sigsum .t{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:13px 14px;box-shadow:var(--shadow)}
+  .sigsum .t .k{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;font-weight:700}
+  .sigsum .t .v{font-size:23px;font-weight:800;margin-top:3px;letter-spacing:-.5px}
+  .sigsum .t .s{font-size:10.5px;color:var(--muted);margin-top:1px}
+
+  /* signal monitor table */
+  table.sig{width:100%;border-collapse:collapse}
+  table.sig thead th{text-align:left;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;font-weight:700;padding:9px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+  table.sig tbody td{padding:11px 12px;border-bottom:1px solid #f0f4f8;font-size:12px;vertical-align:middle}
+  table.sig tbody tr:hover{background:#f7fafd}
+  table.sig .nm{font-weight:700}
+  table.sig .src{font-size:10.5px;color:var(--muted)}
+  .lead{font-weight:700;color:var(--steel)}
+
+  /* funding legend chips */
+  .clegend{display:flex;gap:16px;flex-wrap:wrap;font-size:11.5px;color:var(--ink);margin-top:10px}
+  .clegend .li{display:flex;align-items:center;gap:7px}
+  .clegend .sw{width:14px;height:4px;border-radius:3px}
+  .clegend .dia{width:11px;height:11px;background:var(--gold);transform:rotate(45deg);border:1px solid #a07f28}
+  .note{background:#f7fafd;border:1px dashed var(--line);border-radius:10px;padding:11px 13px;font-size:11.5px;color:#34465a;margin-top:12px}
+  .note b{color:var(--ink)}
+
+  /* config row */
+  .cfg{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+  .cfg input[type=range]{accent-color:var(--steel)}
+  .cfg b{color:var(--ink)}
+
+  /* timeline */
+  .tl{position:relative;padding-left:18px}
+  .tl::before{content:"";position:absolute;left:5px;top:4px;bottom:4px;width:2px;background:var(--line)}
+  .tl .ev{position:relative;padding:0 0 14px 4px}
+  .tl .ev::before{content:"";position:absolute;left:-16px;top:3px;width:9px;height:9px;border-radius:50%;background:var(--steel);border:2px solid #fff;box-shadow:0 0 0 1px var(--line)}
+  .tl .ev.fire::before{background:var(--gold)}
+  .tl .ev .tt{font-weight:700;font-size:12px}
+  .tl .ev .ds{font-size:11px;color:var(--muted)}
+  .tl .ev .tm{font-size:10px;color:var(--muted);margin-top:1px}
+
+  .ph{padding:40px;text-align:center;color:var(--muted);font-size:12.5px}
+  @media(max-width:1200px){.kpis{grid-template-columns:repeat(4,1fr)}.sigsum{grid-template-columns:repeat(2,1fr)}.grid2,.grid3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- Sidebar -->
+  <aside class="side">
+    <div class="brand">
+      <div class="logo">📊</div>
+      <div><h1>ETF Launch Prediction</h1><span>US → Europe</span></div>
+    </div>
+    <nav id="nav">
+      <a data-v="Overview"><span class="ic">▦</span> Overview</a>
+      <a class="active" data-v="US ETFs"><span class="ic">🇺🇸</span> US ETFs</a>
+      <a data-v="Europe ETFs"><span class="ic">🇪🇺</span> Europe ETFs</a>
+      <a data-v="Mapping"><span class="ic">⇄</span> Mapping</a>
+      <a data-v="Prediction Engine"><span class="ic">🧠</span> Prediction Engine</a>
+      <a data-v="Score Explorer"><span class="ic">🔍</span> Score Explorer</a>
+      <a data-v="UCITS Eligibility"><span class="ic">✓</span> UCITS Eligibility</a>
+      <a data-v="Signal Engine"><span class="ic">📡</span> Signal Engine</a>
+      <a data-v="AlphaSense Insights"><span class="ic">💡</span> AlphaSense Insights</a>
+      <a data-v="Reports"><span class="ic">📄</span> Reports</a>
+      <a data-v="Alerts"><span class="ic">🔔</span> Alerts</a>
+      <a data-v="Audit Trail"><span class="ic">🗂</span> Audit Trail</a>
+      <a data-v="Configuration"><span class="ic">⚙</span> Configuration</a>
+    </nav>
+    <div class="src">
+      <h4>Data Sources</h4>
+      <div class="row"><span class="dot"></span> Morningstar Direct</div>
+      <div class="row"><span class="dot"></span> Bloomberg</div>
+      <div class="row"><span class="dot"></span> FactSet</div>
+      <div class="row"><span class="dot"></span> Trackinsight</div>
+      <div class="row"><span class="dot"></span> AlphaSense</div>
+      <div class="row"><span class="dot"></span> LSEG / Lipper</div>
+      <div class="ok"><span class="dot"></span> All systems operational</div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="main">
+    <header class="top">
+      <div class="crumb">US ETFs <span>›</span> <b>AQQQ (US)</b> <span>›</span> Overview &amp; Insights</div>
+      <div class="user" style="margin-left:auto">
+        <div class="refresh">Last Data Refresh<br><b>15 May 2025, 08:30 AM</b></div>
+        <div class="avatar">SJ</div><div><div class="nm">Sarah Johnson</div><div class="ro">Product Manager</div></div>
+      </div>
+    </header>
+
+    <!-- ETF header -->
+    <div class="ehead">
+      <div class="row1">
+        <h2>Invesco NASDAQ-100 ETF</h2>
+        <span class="ticker">AQQQ</span>
+        <span class="flag">🇺🇸</span>
+        <span class="elig-chip">Eligible for Europe</span>
+        <div class="hbtns">
+          <button class="btn">⭳ Export Report</button>
+          <button class="btn">☆ Add to Watchlist</button>
+          <button class="btn primary">⚑ Create Launch Evaluation</button>
+        </div>
+      </div>
+      <p class="meta">Active ETF · Launched: <b>10 Feb 2024</b> · <b>Invesco Ltd.</b> · Ticker: <b>AQQQ</b> · ISIN (US): <b>US46138G6492</b></p>
+      <!-- tab bar -->
+      <div class="tabbar" id="tabbar">
+        <button data-t="exec" class="on">Executive Summary</button>
+        <button data-t="holdings">Holdings &amp; Constituents</button>
+        <button data-t="perf">Performance &amp; Flows</button>
+        <button data-t="elig">Eligibility &amp; UCITS Rules</button>
+        <button data-t="score">Score Breakdown</button>
+        <button data-t="market">Market &amp; Demand Insights</button>
+        <button data-t="comp">Competition &amp; Mapping</button>
+        <button data-t="signal">Signal</button>
+        <button data-t="docs">Documents &amp; Reports</button>
+      </div>
+    </div>
+
+    <div class="wrap">
+      <!-- KPI strip (persistent) -->
+      <div class="kpis">
+        <div class="kpi"><div class="lbl">Launch Probability (EU)</div><div class="val good">92%</div><div class="sub">Very High</div></div>
+        <div class="kpi"><div class="lbl">Overall Score</div><div class="val">88<span style="font-size:12px;color:var(--muted)"> / 100</span></div><div class="sub">Rank #3 of 782</div></div>
+        <div class="kpi"><div class="lbl">UCITS Eligibility</div><div class="val good" style="font-size:18px">PASS</div><div class="sub">All critical rules passed</div></div>
+        <div class="kpi"><div class="lbl">Commercial Success</div><div class="val good" style="font-size:18px">Strong</div><div class="sub">Net Flows 3M: $1.28B</div></div>
+        <div class="kpi"><div class="lbl">Active Signals</div><div class="val" style="color:var(--gold)">6</div><div class="sub">2 watching · 1 dormant</div></div>
+        <div class="kpi"><div class="lbl">European Demand</div><div class="val good" style="font-size:18px">Very High</div><div class="sub">AlphaSense 87/100</div></div>
+        <div class="kpi"><div class="lbl">Last Updated</div><div class="val" style="font-size:14px">15 May 2025</div><div class="sub">Next: 16 May 2025</div></div>
+      </div>
+
+      <!-- ============ EXECUTIVE SUMMARY ============ -->
+      <section id="tab-exec">
+        <div class="grid3 mb16">
+          <div class="card">
+            <div class="hd"><h3><span class="num">1</span> Fund Overview</h3></div>
+            <div class="pad" style="font-size:12px;line-height:1.9">
+              <div style="display:flex;justify-content:space-between"><span class="muted">Issuer</span><b>Invesco Ltd.</b></div>
+              <div style="display:flex;justify-content:space-between"><span class="muted">Benchmark</span><b>NASDAQ-100 Index</b></div>
+              <div style="display:flex;justify-content:space-between"><span class="muted">Asset Class</span><b>Equity</b></div>
+              <div style="display:flex;justify-content:space-between"><span class="muted">Expense Ratio</span><b>0.20%</b></div>
+              <div style="display:flex;justify-content:space-between"><span class="muted">AUM (USD)</span><b>$12.45B</b></div>
+              <div style="display:flex;justify-content:space-between"><span class="muted">Replication</span><b>Full Replication</b></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="hd"><h3><span class="num">2</span> Performance &amp; Flows</h3><span class="lk" data-goto="perf">View →</span></div>
+            <div class="pad" style="font-size:12px;line-height:1.9">
+              <div style="display:flex;justify-content:space-between"><span class="muted">NAV 1Y</span><b class="good">+24.62%</b></div>
+              <div style="display:flex;justify-content:space-between"><span class="muted">Net Flows 3M</span><b class="good">$1.28B</b></div>
+              <div style="display:flex;justify-content:space-between"><span class="muted">Total Inflows 3M</span><b>$2.15B</b></div>
+              <div style="display:flex;justify-content:space-between"><span class="muted">Total Outflows 3M</span><b>$0.87B</b></div>
+              <div style="display:flex;justify-content:space-between"><span class="muted">AUM Growth 1Y</span><b class="good">+38.4%</b></div>
+              <div style="display:flex;justify-content:space-between"><span class="muted">Avg Daily Volume</span><b>$156.7M</b></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="hd"><h3><span class="num">3</span> Signal Snapshot</h3><span class="lk" data-goto="signal">Open Signal tab →</span></div>
+            <div class="pad" style="font-size:12px;line-height:1.85">
+              <div style="display:flex;justify-content:space-between;align-items:center"><span>Seed→Investor Funding</span><span class="pill active"><span class="pd"></span>ACTIVE</span></div>
+              <div style="display:flex;justify-content:space-between;align-items:center"><span>Net Inflow Momentum</span><span class="pill active"><span class="pd"></span>ACTIVE</span></div>
+              <div style="display:flex;justify-content:space-between;align-items:center"><span>Institutional RFP Activity</span><span class="pill active"><span class="pd"></span>ACTIVE</span></div>
+              <div style="display:flex;justify-content:space-between;align-items:center"><span>Issuer Earnings-Call Mention</span><span class="pill watch"><span class="pd"></span>WATCHING</span></div>
+              <div style="display:flex;justify-content:space-between;align-items:center"><span>Mutual-Fund Outflow (Group C)</span><span class="pill dormant"><span class="pd"></span>DORMANT</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="hd"><h3><span class="num">4</span> Why This ETF Scores High</h3><span class="lk" data-goto="score">Score breakdown →</span></div>
+          <div class="pad" style="font-size:12.5px;line-height:1.9">
+            Broad, diversified NASDAQ-100 exposure with high liquidity and a low expense ratio versus category. Strong AUM growth and consistent net inflows demonstrate the commercial success threshold the model treats as the decisive input. High European investor demand (AlphaSense 87/100) and an existing Invesco UCITS platform with established distribution support a fast, low-friction European launch.
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ SIGNAL TAB ============ -->
+      <section id="tab-signal" class="hidden">
+        <!-- summary tiles -->
+        <div class="sigsum">
+          <div class="t"><div class="k">Active Signals</div><div class="v" style="color:var(--green-d)">6</div><div class="s">of 9 monitored · 2 watching · 1 dormant</div></div>
+          <div class="t"><div class="k">Strongest Signal</div><div class="v" style="font-size:16px;margin-top:8px">Seed→Investor Funding</div><div class="s">Investor AUM 124× seed capital</div></div>
+          <div class="t"><div class="k">Composite Signal Strength</div><div class="v" style="color:var(--gold)">High</div><div class="s">Weighted across active signals</div></div>
+          <div class="t"><div class="k">Earliest Lead Indicator</div><div class="v" style="font-size:16px;margin-top:8px">12–36 mo</div><div class="s">Outflow precursor (when it fires)</div></div>
+        </div>
+
+        <!-- FUNDING SIGNAL CHART -->
+        <div class="card mb16">
+          <div class="hd">
+            <h3><span class="num">★</span> Seed vs. Investor Funding — Organic Demand Signal</h3>
+            <span class="muted" style="font-size:11px">Months since US launch · log scale</span>
+          </div>
+          <div class="pad">
+            <p class="muted" style="margin:0 0 8px;font-size:12px">Seed funding is the issuer/AP capital committed at launch. Investor funding is cumulative organic external inflows. When investor funding exceeds a configurable multiple of seed capital, the product has demonstrated genuine market traction — the commercial-success trigger that justifies a European launch. The <b style="color:#a07f28">◆ diamond</b> marks the month the signal fired.</p>
+            <div class="cfg mb16">
+              <span>Signal threshold:</span>
+              <input id="thr" type="range" min="100" max="1000" step="50" value="300" style="width:200px"/>
+              <span>Investor funding ≥ <b id="thrV">300</b>% of seed</span>
+              <span style="margin-left:auto">Fired at: <b id="fireAt" style="color:#a07f28">Month 2</b> · Investor <b>$0.35B</b> vs Seed <b>$0.10B</b></span>
+            </div>
+            <div style="height:340px"><canvas id="fundChart"></canvas></div>
+            <div class="clegend">
+              <div class="li"><span class="sw" style="background:#94a3b8"></span> Seed Funding (issuer/AP)</div>
+              <div class="li"><span class="sw" style="background:#2e6ca4"></span> Investor Funding (organic inflows)</div>
+              <div class="li"><span class="sw" style="background:#c8a24b;height:2px;border-top:2px dashed #c8a24b;background:none;width:18px"></span> Signal threshold</div>
+              <div class="li"><span class="dia"></span> Signal fired (◆)</div>
+            </div>
+            <div class="note"><b>Interpretation.</b> AQQQ crossed the 300% threshold in month 2 and has since reached an investor-to-seed ratio of ~124× ($12.35B investor vs ~$0.10B seed). Sustained organic accumulation well beyond seed capital is the platform's primary evidence of demonstrated commercial success, consistent with the flows-first thesis.</div>
+          </div>
+        </div>
+
+        <!-- SIGNAL MONITOR -->
+        <div class="card mb16">
+          <div class="hd"><h3>Signal Monitor — All Signals</h3><span class="muted" style="font-size:11px">Consolidated from RFPs, distribution, flows, filings &amp; AlphaSense</span></div>
+          <div style="overflow-x:auto">
+            <table class="sig">
+              <thead><tr>
+                <th>Signal</th><th>Status</th><th>Current Value</th><th>Trigger Threshold</th><th>Lead Time</th><th>Source</th>
+              </tr></thead>
+              <tbody id="sigBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- distribution signals moved in + timeline -->
+        <div class="grid2">
+          <div class="card">
+            <div class="hd"><h3>Distribution Signals</h3><span class="muted" style="font-size:11px">Moved from RFPs &amp; Signals</span></div>
+            <div class="pad grid3" style="gap:12px">
+              <div style="text-align:center"><div class="muted" style="font-size:10.5px">RFP Activity (30d)</div><div style="font-size:22px;font-weight:800;color:var(--green-d)">8</div><div class="muted" style="font-size:10.5px">Active RFPs</div></div>
+              <div style="text-align:center"><div class="muted" style="font-size:10.5px">Distributor Interest (60d)</div><div style="font-size:22px;font-weight:800;color:var(--green-d)">High</div><div class="muted" style="font-size:10.5px">14 requests received</div></div>
+              <div style="text-align:center"><div class="muted" style="font-size:10.5px">Model Portfolio (30d)</div><div style="font-size:22px;font-weight:800;color:var(--steel)">23</div><div class="muted" style="font-size:10.5px">Mentions</div></div>
+            </div>
+            <div class="pad" style="padding-top:0"><div class="note" style="margin-top:0"><b>European distributor pull.</b> 8 active institutional RFPs and 23 model-portfolio mentions indicate the buy-side is already positioning for a UCITS version. RFP and distributor signals corroborate the funding signal from the demand side.</div></div>
+          </div>
+          <div class="card">
+            <div class="hd"><h3>Recent Signal Events</h3><span class="lk">View full log →</span></div>
+            <div class="pad">
+              <div class="tl">
+                <div class="ev fire"><div class="tt">Seed→Investor funding signal fired</div><div class="ds">Investor funding crossed 300% of seed capital</div><div class="tm">Apr 2024 · Month 2</div></div>
+                <div class="ev fire"><div class="tt">AUM milestone reached</div><div class="ds">Crossed $10B category threshold</div><div class="tm">Jan 2025</div></div>
+                <div class="ev"><div class="tt">8th institutional RFP logged</div><div class="ds">DACH pension mandate, US large-cap growth in UCITS wrapper</div><div class="tm">05 May 2025</div></div>
+                <div class="ev"><div class="tt">Net inflow momentum confirmed</div><div class="ds">3-month net flows positive for 6 consecutive months</div><div class="tm">12 May 2025</div></div>
+                <div class="ev"><div class="tt">Earnings-call monitor — no mention yet</div><div class="ds">AlphaSense: no Invesco European NASDAQ-100 UCITS reference</div><div class="tm">14 May 2025</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- other tabs: lightweight placeholders -->
+      <section id="tab-holdings" class="hidden"><div class="card"><div class="ph">Holdings &amp; Constituents — 100 holdings, top-10 concentration 52.7%. (Existing panel.)</div></div></section>
+      <section id="tab-perf" class="hidden"><div class="card"><div class="ph">Performance &amp; Flows — NAV +24.62% 1Y, net flows $1.28B 3M. (Existing panel.)</div></div></section>
+      <section id="tab-elig" class="hidden"><div class="card"><div class="ph">Eligibility &amp; UCITS Rules — all critical rules PASS. (Existing panel.)</div></div></section>
+      <section id="tab-score" class="hidden"><div class="card"><div class="ph">Score Breakdown — 88/100 across UCITS Portability, Commercial Success, European Demand, Issuer Capability, Competitive Landscape. (Existing panel.)</div></div></section>
+      <section id="tab-market" class="hidden"><div class="card"><div class="ph">Market &amp; Demand Insights — AlphaSense sentiment 87/100. (Existing panel.)</div></div></section>
+      <section id="tab-comp" class="hidden"><div class="card"><div class="ph">Competition &amp; Mapping — 4 similar UCITS ETFs (similarity &lt; 70%). (Existing panel.)</div></div></section>
+      <section id="tab-docs" class="hidden"><div class="card"><div class="ph">Documents &amp; Reports — Fact Sheet, Prospectus, Holdings Report, KID, Performance Report. (Existing panel.)</div></div></section>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------- Funding signal data (months since launch, $B) ---------- */
+const MONTHS = Array.from({length:16},(_,i)=>i);
+const SEED = 0.10;                                  // issuer/AP seed capital ($B), constant
+const seedSeries = MONTHS.map(()=>SEED);
+const investor = [0.03,0.12,0.35,0.78,1.45,2.40,3.60,4.90,6.20,7.50,8.70,9.80,10.70,11.40,12.00,12.35];
+
+let fundChart;
+function fireMonth(thrPct){
+  const need = SEED*(thrPct/100);
+  for(let i=0;i<investor.length;i++){ if(investor[i] >= need) return i; }
+  return null;
+}
+function buildFund(){
+  const thrPct = +document.getElementById('thr').value;
+  document.getElementById('thrV').textContent = thrPct;
+  const thr = SEED*(thrPct/100);
+  const fm = fireMonth(thrPct);
+  const thrSeries = MONTHS.map(()=>thr);
+  // diamond dataset: single point at fire month
+  const diamond = MONTHS.map((m,i)=> (i===fm)? investor[i] : null);
+
+  document.getElementById('fireAt').textContent = fm===null ? 'Not fired' : ('Month '+fm);
+
+  const data = {
+    labels: MONTHS,
+    datasets:[
+      {label:'Seed Funding', data:seedSeries, borderColor:'#94a3b8', backgroundColor:'#94a3b8',
+       borderWidth:2, pointRadius:0, tension:.2, borderDash:[2,2]},
+      {label:'Investor Funding', data:investor, borderColor:'#2e6ca4', backgroundColor:'rgba(46,108,164,.08)',
+       borderWidth:2.5, pointRadius:0, tension:.25, fill:true},
+      {label:'Signal Threshold', data:thrSeries, borderColor:'#c8a24b', backgroundColor:'#c8a24b',
+       borderWidth:1.5, pointRadius:0, borderDash:[6,4]},
+      {label:'Signal Fired', data:diamond, borderColor:'#a07f28', backgroundColor:'#c8a24b',
+       pointStyle:'rectRot', pointRadius:11, pointHoverRadius:13, borderWidth:2, showLine:false}
+    ]
+  };
+  const cfg = {
+    type:'line', data,
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      interaction:{mode:'index',intersect:false},
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{
+          title:(it)=>'Month '+it[0].label,
+          label:(c)=>{ if(c.dataset.label==='Signal Fired'){ return c.raw==null?null:'◆ SIGNAL FIRED · $'+c.raw.toFixed(2)+'B'; }
+            return c.dataset.label+': $'+(c.raw==null?'-':(+c.raw).toFixed(2))+'B'; }
+        }}
+      },
+      scales:{
+        y:{type:'logarithmic', min:0.01, max:20, grid:{color:'#eef2f7'},
+           ticks:{font:{size:10}, callback:(v)=>{ const a=[0.01,0.1,1,10]; return a.includes(v)?('$'+v+'B'):''; }},
+           title:{display:true,text:'Funding (USD bn, log)',font:{size:10},color:'#64748b'}},
+        x:{grid:{display:false}, ticks:{font:{size:10}},
+           title:{display:true,text:'Months since US launch',font:{size:10},color:'#64748b'}}
+      }
+    },
+    plugins:[{
+      id:'sigLabel',
+      afterDatasetsDraw(chart){
+        const fmL = fireMonth(+document.getElementById('thr').value);
+        if(fmL===null) return;
+        const meta = chart.getDatasetMeta(3);
+        const pt = meta.data[fmL]; if(!pt) return;
+        const ctx = chart.ctx;
+        ctx.save();
+        ctx.font='700 10.5px -apple-system,Segoe UI,sans-serif';
+        ctx.fillStyle='#a07f28';
+        ctx.textAlign='left';
+        ctx.fillText('◆ SIGNAL', pt.x+10, pt.y-6);
+        ctx.font='600 9.5px -apple-system,Segoe UI,sans-serif';
+        ctx.fillStyle='#64748b';
+        ctx.fillText('organic demand confirmed', pt.x+10, pt.y+7);
+        ctx.restore();
+      }
+    }]
+  };
+  if(fundChart) fundChart.destroy();
+  fundChart = new Chart(document.getElementById('fundChart'), cfg);
+}
+
+/* ---------- Signal monitor rows ---------- */
+const SIGNALS = [
+  ['Seed → Investor Funding Ratio','active','Investor 124× seed ($12.35B / $0.10B)','Investor ≥ 3× seed capital','At launch (M+2)','Morningstar · Issuer filings'],
+  ['Net Inflow Momentum','active','+$1.28B net (3M), 6 mo positive','3-mo net flow > 0 for ≥ 6 mo','Concurrent','Morningstar Direct'],
+  ['AUM Milestone Threshold','active','$12.45B','> category threshold ($10B)','0–6 mo','Morningstar · Bloomberg'],
+  ['European Demand (AlphaSense)','active','87 / 100','Sentiment ≥ 75','0–6 mo','AlphaSense'],
+  ['Institutional RFP Activity','active','8 active RFPs (30d)','≥ 3 active RFPs','3–9 mo','Distribution / Sales'],
+  ['Distributor &amp; Model-Portfolio Pull','active','High · 14 reqs · 23 mentions','≥ 10 mentions / qtr','3–9 mo','Distribution · ETFbook'],
+  ['Issuer Earnings-Call Mention','watch','No EU UCITS mention detected','First mention of EU expansion','6–12 mo','AlphaSense'],
+  ['Index Licensing / Regulatory Filing','watch','No UCITS filing detected','SEC/UCITS filing or ISIN reservation','0–6 mo','LSEG · Regulatory'],
+  ['Mutual-Fund Outflow Precursor (Group C)','dormant','N/A — passive index strategy','$50B+ fund, −5%/yr, ≥18 mo','12–36 mo','Morningstar Direct']
+];
+function pill(s){ const m={active:'ACTIVE',watch:'WATCHING',dormant:'DORMANT'}; return `<span class="pill ${s}"><span class="pd"></span>${m[s]}</span>`; }
+document.getElementById('sigBody').innerHTML = SIGNALS.map(r=>`<tr>
+  <td class="nm">${r[0]}</td><td>${pill(r[1])}</td><td>${r[2]}</td>
+  <td class="muted">${r[3]}</td><td class="lead">${r[4]}</td><td class="src">${r[5]}</td></tr>`).join('');
+
+/* ---------- Tab switching ---------- */
+const TABS=['exec','holdings','perf','elig','score','market','comp','signal','docs'];
+function showTab(t){
+  TABS.forEach(x=>document.getElementById('tab-'+x).classList.toggle('hidden', x!==t));
+  document.querySelectorAll('#tabbar button').forEach(b=>b.classList.toggle('on', b.dataset.t===t));
+  if(t==='signal' && !fundChart) buildFund();
+}
+document.querySelectorAll('#tabbar button').forEach(b=>b.onclick=()=>showTab(b.dataset.t));
+document.querySelectorAll('[data-goto]').forEach(el=>el.onclick=()=>showTab(el.dataset.goto));
+document.querySelectorAll('#nav a').forEach(a=>a.onclick=()=>{document.querySelectorAll('#nav a').forEach(x=>x.classList.remove('active'));a.classList.add('active');});
+document.getElementById('thr').addEventListener('input',buildFund);
+
+window.addEventListener('load',()=>{ showTab('exec'); });
+</script>
+</body>
+</html>
